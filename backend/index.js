@@ -10,7 +10,7 @@ app.use(express.json());
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'postgres',
+  database: 'compAI',
   password: 'webia_3345',
   port: 5432,
 });

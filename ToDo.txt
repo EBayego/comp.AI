@@ -1,0 +1,9 @@
+✔ save data in db
+show in a section the top cpus
+
+✔ do the same with every component
+
+make a navigatable website
+
+create chatbot emerging window
+finetune chatbot
