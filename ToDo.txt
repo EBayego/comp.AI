@@ -7,3 +7,10 @@ make a navigatable website
 
 create chatbot emerging window
 finetune chatbot
+
+
+
+____
+
+Delete "Todos" option from search bar. Allow only search by component
+Integrate AI

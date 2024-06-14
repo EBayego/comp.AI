@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const SearchBar = ({ onSearchChange, search }) => {
+const SearchBar = ({ search, onSearchChange, onSearch }) => {
+  const [localSearch, setLocalSearch] = useState(search);
+
+  const handleSearch = () => {
+    onSearch(localSearch);
+  };
+
   return (
-    <input
-      type="text"
-      placeholder="Buscar..."
-      className="p-2 border border-gray-300 rounded w-full"
-      value={search}
-      onChange={(e) => onSearchChange(e.target.value)}
-    />
+    <div className="flex items-center">
+      <input
+        type="text"
+        value={localSearch}
+        onChange={e => setLocalSearch(e.target.value)}
+        className="border p-2 rounded mr-2"
+        placeholder="Buscar..."
+      />
+      <button onClick={handleSearch} className="bg-blue-500 text-white p-2 rounded">
+        Buscar
+      </button>
+    </div>
   );
 };
 
