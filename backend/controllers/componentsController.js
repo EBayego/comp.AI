@@ -28,10 +28,6 @@ const getPopularProducts = async (req, res) => {
 const searchProducts = async (req, res) => {
   const { category, search, maxPrice, limit = 25, offset = 0 } = req.query;
 
-  if (!search) {
-    return res.status(400).json({ error: 'Search query is required' });
-  }
-
   const queries = [];
   const params = [];
   let queryIndex = 1;
@@ -55,10 +51,10 @@ const searchProducts = async (req, res) => {
     queries.push(query);
   };
 
-  if (category === 'cpu' || category === 'Todos') addQuery('cpu_data');
-  if (category === 'gpu' || category === 'Todos') addQuery('gpu_data');
-  if (category === 'motherboard' || category === 'Todos') addQuery('motherboard_data');
-  if (category === 'case' || category === 'Todos') addQuery('case_data');
+  if (category === 'cpu') addQuery('cpu_data');
+  if (category === 'gpu') addQuery('gpu_data');
+  if (category === 'motherboard') addQuery('motherboard_data');
+  if (category === 'case') addQuery('case_data');
 
   if (queries.length === 0) {
     return res.status(400).json({ error: 'Invalid category' });

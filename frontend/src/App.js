@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import SearchBar from './components/SearchBar';
-import Filter from './components/Filter';
 import ProductSection from './components/ProductSection';
 import Pagination from './components/Pagination';
 
@@ -8,7 +7,7 @@ const App = () => {
   const [popularProducts, setPopularProducts] = useState({ cpus: [], gpus: [], motherboards: [], cases: [] });
   const [searchResults, setSearchResults] = useState([]);
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState({ category: 'Todos', maxPrice: '' });
+  const [filter, setFilter] = useState({ category: 'cpu', maxPrice: '' });
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -52,7 +51,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (search || filter.category !== 'Todos' || filter.maxPrice) {
+    if (search || filter.maxPrice || filter.category) {
       fetchSearchResults(search, filter.category, filter.maxPrice, page);
     }
   }, [filter, search, page]);
@@ -65,11 +64,16 @@ const App = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold text-center my-4">Componentes de Ordenador</h1>
-      <div className="flex justify-between mb-4">
-        <SearchBar search={search} onSearchChange={setSearch} onSearch={handleSearch} />
-        <Filter filter={filter} onFilterChange={setFilter} />
+      <div className="flex justify-center mb-4">
+        <SearchBar 
+          search={search} 
+          onSearchChange={setSearch} 
+          onSearch={handleSearch} 
+          filter={filter} 
+          onFilterChange={setFilter} 
+        />
       </div>
-      {search || filter.category !== 'Todos' || filter.maxPrice ? (
+      {search || filter.maxPrice ? (
         <ProductSection title="Resultados de Búsqueda" products={searchResults} />
       ) : (
         <>
