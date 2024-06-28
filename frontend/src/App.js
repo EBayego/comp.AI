@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SearchBar from './components/SearchBar';
 import ProductSection from './components/ProductSection';
 import Pagination from './components/Pagination';
+import Chatbot from './components/ChatBot';
 
 const App = () => {
   const [popularProducts, setPopularProducts] = useState({ cpus: [], gpus: [], motherboards: [], cases: [] });
@@ -84,6 +85,7 @@ const App = () => {
         </>
       )}
       <Pagination currentPage={page} onPageChange={setPage} />
+      <Chatbot />
     </div>
   );
 };
