@@ -1,0 +1,6 @@
+uvicorn
+fastapi
+# node
+# npm
+transformers
+torch
