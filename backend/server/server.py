@@ -1,26 +1,35 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
+from gradio_client import Client
+
+client = Client("EBayego/PCHelper", hf_token="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")
 
 app = FastAPI()
 
-model_name = "LLM360/K2"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
+# If CORS is not allowed, it will appear 405 Method Not Allowed
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class Message(BaseModel):
     message: str
 
 @app.post("/api/chatbot")
 async def get_response(msg: Message):
-    try:
-        inputs = tokenizer.encode(msg.message, return_tensors="pt")
-        outputs = model.generate(inputs, max_length=100, do_sample=True, top_p=0.95, top_k=60)
-        response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        return {"reply": response}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    result = client.predict(
+        message=msg.message,
+        system_message="You are a knowledgeable computer hardware advisor that provide expert advice based on the information available.",
+        max_tokens=512,
+        api_name="/chat"
+    )
+    print("Respuesta del modelo:", result)  # Añade este print para ver la respuesta en la consola
+    return {"reply": result}
 
 @app.get("/")
 async def root():

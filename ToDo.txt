@@ -1,16 +1,11 @@
 ✔ save data in db
-show in a section the top cpus
-
+✔ show in a section the top cpus
+create a script for every data file
 ✔ do the same with every component
 
-make a navigatable website
-
-create chatbot emerging window
+✔ create chatbot emerging window
 finetune chatbot
 
+Save Private Token in Local File and Encode it. Unencode it and read it to access to the API
 
-
-____
-
-Delete "Todos" option from search bar. Allow only search by component
-Integrate AI
+make website more friendly
