@@ -7,6 +7,7 @@ def jsonToDb(name, save=False):
     data = json.load(f)
     df = pd.json_normalize(data)
 
+    df.columns = [col.title() for col in df.columns]
     print(df)
     print(df.isna().sum())
 

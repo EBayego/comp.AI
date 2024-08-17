@@ -7,5 +7,8 @@ create a script for every data file
 finetune chatbot
 
 Save Private Token in Local File and Encode it. Unencode it and read it to access to the API
+✔Compare LLMs
+
+FineTune Localy zephyr 7B with the data
 
 make website more friendly

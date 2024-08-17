@@ -4,3 +4,6 @@ fastapi
 # npm
 transformers
 torch
+pandas
+sqlalchemy
+ftfy

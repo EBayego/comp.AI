@@ -29,7 +29,6 @@ columnas_amd = {
 
 dfcsv = dfcsv.rename(columns=columnas_amd)
 df = dfcsv[list(columnas_amd.values())]
-#df.insert(0, 'ID', df.index)
 
 def clean_text(text):
     if pd.isna(text):

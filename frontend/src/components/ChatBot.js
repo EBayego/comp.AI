@@ -34,7 +34,7 @@ const Chatbot = () => {
   return (
     <div className={`chatbot-container ${isOpen ? 'open' : ''}`}>
       <button onClick={toggleChatbot} className="chatbot-toggle-button">
-        {isOpen ? 'Close' : 'Chat'}
+        {isOpen ? '⇩' : 'Chat'}
       </button>
       {isOpen && (
         <div className="chatbot-window">
