@@ -2,8 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from gradio_client import Client
+from .decrypt import ret_pass
 
-client = Client("EBayego/PCHelper", hf_token="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")
+client = Client("EBayego/PCHelper", hf_token=ret_pass("pass_huggingface"))
 
 app = FastAPI()
 
@@ -16,7 +17,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 class Message(BaseModel):
     message: str
 
@@ -28,7 +28,7 @@ async def get_response(msg: Message):
         max_tokens=512,
         api_name="/chat"
     )
-    print("Respuesta del modelo:", result)  # Añade este print para ver la respuesta en la consola
+    print("Respuesta del modelo:", result)
     return {"reply": result}
 
 @app.get("/")

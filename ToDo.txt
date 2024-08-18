@@ -1,12 +1,11 @@
 ✔ save data in db
 ✔ show in a section the top cpus
-create a script for every data file
+✔create a script for every data file
 ✔ do the same with every component
 
 ✔ create chatbot emerging window
-finetune chatbot
 
-Save Private Token in Local File and Encode it. Unencode it and read it to access to the API
+✔Save Private Token in Local File and Encode it. Unencode it and read it to access to the API
 ✔Compare LLMs
 
 FineTune Localy zephyr 7B with the data

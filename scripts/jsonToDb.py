@@ -1,6 +1,7 @@
 import json
 import pandas as pd   
 from sqlalchemy import create_engine 
+from decrypt import ret_pass
 
 def jsonToDb(name, save=False):
     f = open(name)
@@ -12,7 +13,8 @@ def jsonToDb(name, save=False):
     print(df.isna().sum())
 
     if save:
-        engine = create_engine('postgresql://postgres:webia_3345@localhost:5432/compAI')
+        route = "postgresql://postgres:" + ret_pass("pass_postgre") + "@localhost:5432/compAI"
+        engine = create_engine(route)
         df.to_sql('case_data', engine, if_exists='replace', index=False, method='multi')
         print("Data saved in DB")
 

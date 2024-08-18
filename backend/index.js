@@ -1,19 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-const { Pool } = require('pg');
 const componentsRouter = require('./routes/components');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'compAI',
-  password: 'webia_3345',
-  port: 5432,
-});
 
 app.use('/api', componentsRouter);
 
