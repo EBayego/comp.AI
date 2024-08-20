@@ -7,6 +7,7 @@ df = pd.read_csv('./data/tpu_gpus.csv', delimiter=',')
 df = df.drop(df.columns[[0, 8]], axis=1)
 df.rename(columns={'Released': 'ReleaseDate'}, inplace=True)
 df.rename(columns={'Product_Name': 'Model'}, inplace=True)
+df = df[df['Model'] != "No graphics cards found. Please change your search criteria."]
 print (df)
 #print(df.isna().sum())
 

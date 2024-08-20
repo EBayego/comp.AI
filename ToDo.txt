@@ -8,6 +8,9 @@
 ✔Save Private Token in Local File and Encode it. Unencode it and read it to access to the API
 ✔Compare LLMs
 
+Process data to FineTune
+    - Change def to_text to add conditions on first attributes too
+
 FineTune Localy zephyr 7B with the data
 
 make website more friendly
