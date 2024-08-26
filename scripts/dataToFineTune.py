@@ -33,12 +33,15 @@ for tabla in tablas:
 conn.close()
 
 def to_text(i, row):
-    print("Fila: ", row)
+    #print("Fila: ", row)
     nar = ""
     sc = "{Type: " + tablenames[i] + ", "
     
-    if tablenames[i] == "gpu":
-        nar = row.get('Model', '') + " features the " + row.get('GPU_Chip', '') + " chip "
+    if tablenames[i] == "gpu" and row.get('Model'):
+        nar = row.get('Model') + " is a GPU "
+        if row.get('GPU_Chip'):
+            nar += "that features the " + row.get('GPU_Chip', '') + " chip "
+            sc += f'GPU_Chip: {row.get("GPU_Chip")}, '
         if row.get('Bus'):
             nar += "with a " + row.get('Bus') + " bus interface "
             sc += f'Bus: {row.get("Bus")}, '
@@ -52,8 +55,11 @@ def to_text(i, row):
             nar += "and a memory clock of " + row.get('Memory_clock') + "."
             sc += f'Memory_Clock: {row.get("Memory_clock")}, '
 
-    elif tablenames[i] == "cpu":
-        nar = row.get('Model', '') + " operates at " + row.get('ClockSpeed', '') + " GHz "
+    elif tablenames[i] == "cpu" and row.get('Model'):
+        nar = row.get('Model') + " is a CPU "
+        if row.get('ClockSpeed', ''):
+            nar += "that operates at " + row.get('ClockSpeed') + " GHz "
+            sc += f'Clock_Speed: {row.get("ClockSpeed")}, '
         if row.get('BoostClockSpeed'):
             nar += "and can boost up to " + row.get('BoostClockSpeed') + " GHz "
             sc += f'Boost_Clock_Speed: {row.get("BoostClockSpeed")}, '
@@ -70,8 +76,11 @@ def to_text(i, row):
             nar += "with a TDP of " + row.get('TDP') + "W."
             sc += f'TDP: {row.get("TDP")}, '
 
-    elif tablenames[i] == "motherboard":
-        nar = "The " + row.get('Name', '') + " motherboard costs " + row.get('Price', '')
+    elif tablenames[i] == "motherboard" and row.get('Name'):
+        nar = "The " + row.get('Name') + " is a Motherboard"
+        if row.get('Price'):
+            nar += " that costs " + str(row.get('Price'))
+            sc += f'Price: {row.get("Price")}, '
         if row.get('Socket'):
             nar += " and supports the " + row.get('Socket') + " socket"
             sc += f'Socket: {row.get("Socket")}, '
@@ -79,17 +88,20 @@ def to_text(i, row):
             nar += " with a " + row.get('Form_Factor') + " form factor"
             sc += f'Form_Factor: {row.get("Form_Factor")}, '
         if row.get('Max_Memory'):
-            nar += " supporting up to " + row.get('Max_Memory') + " of memory"
+            nar += " supporting up to " + str(row.get('Max_Memory')) + " of memory"
             sc += f'Max_Memory: {row.get("Max_Memory")}, '
         if row.get('Memory_Slots'):
-            nar += " with " + row.get('Memory_Slots') + " memory slots"
+            nar += " with " + str(row.get('Memory_Slots')) + " memory slots"
             sc += f'Memory_Slots: {row.get("Memory_Slots")}, '
         if row.get('Color'):
             nar += " and is available in " + row.get('Color') + " color."
             sc += f'Color: {row.get("Color")}, '
 
-    elif tablenames[i] == "case":
-        nar = "The " + row.get('Name', '') + " case is priced at " + row.get('Price', '')
+    elif tablenames[i] == "case" and row.get('Name'):
+        nar = "The " + row.get('Name') + " is a Case "
+        if row.get('Price'):
+            nar += " that is priced at " + str(row.get('Price'))
+            sc += f'Price: {row.get("Price")}, '
         if row.get('Type'):
             nar += " and is a " + row.get('Type') + " type case"
             sc += f'Type: {row.get("Type")}, '
@@ -97,7 +109,7 @@ def to_text(i, row):
             nar += " available in " + row.get('Color') + " color"
             sc += f'Color: {row.get("Color")}, '
         if row.get('Psu'):
-            nar += " and comes with a " + row.get('Psu') + " PSU"
+            nar += " and comes with a " + str(row.get('Psu')) + " PSU"
             sc += f'PSU: {row.get("Psu")}, '
         if row.get('Side_Panel'):
             nar += " featuring a " + row.get('Side_Panel') + " side panel"
@@ -108,6 +120,8 @@ def to_text(i, row):
         if row.get('Internal_35_Bays'):
             nar += " and " + str(row.get('Internal_35_Bays')) + " internal 3.5\" bays."
             sc += f'Internal_35_Bays: {row.get("Internal_35_Bays")}, '
+    else:
+        return
 
     if sc.endswith(', '):
         sc = sc[:-2]
@@ -120,9 +134,19 @@ data = []
 for i, df in enumerate(datos):
     for _, row in df.iterrows():
         descripcion, esquema = to_text(i, row)
-        data.append(esquema)
-        data.append(descripcion)
+        if esquema:
+            data.append(esquema)
+        if descripcion:
+            data.append(descripcion)
 
-with open("data.txt", "w") as archivo:
+# Only GPU
+# for _, row in datos[0].iterrows():
+#     descripcion, esquema = to_text(0, row)
+#     if esquema:
+#         data.append(esquema)
+#     if descripcion:
+#         data.append(descripcion)
+
+with open("data.txt", "w", encoding="utf-8") as archivo:
     for elemento in data:
-        archivo.write(elemento + "\n")
+        archivo.write(str(elemento) + "\n")
