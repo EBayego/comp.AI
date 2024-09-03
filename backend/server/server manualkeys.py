@@ -9,8 +9,6 @@ from sqlalchemy.sql import select
 # Connect with Hugging Face Spaces
 client = Client("EBayego/PCHelper", hf_token=ret_pass("pass_huggingface"))
 
-conraw = Client("EBayego/ConRaw", hf_token=ret_pass("pass_hf_conraw"))
-
 app = FastAPI()
 
 # If CORS is not allowed, it will appear 405 Method Not Allowed
@@ -43,7 +41,6 @@ def get_table_names():
 
 def load_tables(metadata):
     table_names = get_table_names()
-    print("nombre de tablas: ", table_names)
     tables = {}
     for table_name in table_names:
         tables[table_name] = Table(table_name, metadata, autoload_with=engine)
@@ -55,30 +52,24 @@ class Message(BaseModel):
     message: str
 
 def get_component_info(message: str):
-    print("message: ", message)
     connection = engine.connect()
-    component, model_name = [s.strip() for s in message.split(':', 1)]
-    component_table = component.lower() + "_data"
-    table = tables.get(component_table)
-    if not table:
-        return f"No table found for component '{component}'."
-    
+    print("message: ", message)
     try:
-        # Realizar una búsqueda básica por nombre de componente en las tablas
-        query = select(table).where(
-            or_(
-                table.c.get('Model').ilike(f"%{model_name}%") if 'Model' in table.c else False,
-                table.c.get('Name').ilike(f"%{model_name}%") if 'Name' in table.c else False
+        for table_name, table in tables.items():
+            # Realizar una búsqueda básica por nombre de componente en las tablas
+            query = select(table).where(
+                or_(
+                    table.c.get('Model').ilike(f"%{message}%") if 'Model' in table.c else False,
+                    table.c.get('Name').ilike(f"%{message}%") if 'Name' in table.c else False
+                )
             )
-        )
-        result = connection.execute(query).fetchall()
-        print("resultado de la query: ", result)
+            result = connection.execute(query).fetchall()
 
-        if result:
-            # Combinar y formatear la información del componente
-            component_info = "\n".join([f"{row['name']}: {row['specs']}" for row in result])
-            print("component_info: ", component_info)
-            return component_info
+            if result:
+                # Combinar y formatear la información del componente
+                component_info = "\n".join([f"{row['name']}: {row['specs']}" for row in result])
+                print("component_info: ", component_info)
+                return component_info
 
     finally:
         connection.close()
@@ -86,20 +77,13 @@ def get_component_info(message: str):
 
 @app.post("/api/chatbot")
 async def get_response(msg: Message):
-    keyw = conraw.predict(
-        message=msg.message,
-        api_name="/chat"
-    )
-    print("palabras clave: ", keyw)
-    
-    if keyw:
-        component_info = get_component_info(keyw)
-        if component_info:
-            full_message = f"User Message: {msg.message}\n\nComponent Info: {component_info}"
-    
-    full_message = msg.message
-    print("full_message: ", full_message)
+    component_info = get_component_info(msg.message)
+    if component_info:
+        full_message = f"User Message: {msg.message}\n\nComponent Info: {component_info}"
+    else:
+        full_message = msg.message
 
+    print("full_message: ", full_message)
     result = client.predict(
         message=full_message,
         system_message="Eres un amable y educado asesor experto en una tienda de hardware informático que brinda asesoramiento experto basado en la información más reciente y precisa",
